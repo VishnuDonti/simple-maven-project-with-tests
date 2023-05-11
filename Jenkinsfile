@@ -1,9 +1,11 @@
-podTemplate(containers: [containerTemplate(name: 'maven', image: 'maven', command: 'sleep', args: 'infinity')]) {
-  node(POD_LABEL) {
+node {
+  stage('SCM') {
     checkout scm
-    container('maven') {
-      sh 'mvn -B -ntp -Dmaven.test.failure.ignore verify'
+  }
+  stage('SonarQube Analysis') {
+    def mvn = tool 'Default Maven';
+    withSonarQubeEnv() {
+      sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=SimpleMavenProject-1 -Dsonar.projectName='SimpleMavenProject-1'"
     }
-    junit '**/target/surefire-reports/TEST-*.xml'
   }
 }
