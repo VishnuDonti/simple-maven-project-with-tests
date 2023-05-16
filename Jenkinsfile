@@ -18,7 +18,7 @@ node {
             setBuildStatus("Build failed", "FAILURE");
         } 
     }
-  
+} 
   void setBuildStatus(String message, String state) {
     step([
         $class: "GitHubCommitStatusSetter",
@@ -28,4 +28,4 @@ node {
         statusResultSource: [$class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]]]
     ]);
 }
-}
+
