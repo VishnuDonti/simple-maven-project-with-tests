@@ -1,5 +1,6 @@
 node {
   try {
+    
   stage('SCM') {
     checkout scm
   }
@@ -18,24 +19,24 @@ node {
     throw e
   } finally {
    def currentResult = currentBuild.result ?: 'SUCCESS'
+    echo '$currentResult'
         if (currentResult == 'UNSTABLE') {
             echo 'This will run only if the run was marked as unstable'
             setBuildStatus("Build Unstable", "FAILED") 
-        } else {
-          setBuildStatus("Build Stable", "SUCCESS") 
-        }    
+        } else if(currentResult == 'FAILED'){
+          setBuildStatus("Build Failed", "FAILED") 
+        }  else {
+          setBuildStatus("Build Success", "Success") 
+        }
 } 
 }
 
 void setBuildStatus(String message, String state) {
   step([
       $class: "GitHubCommitStatusSetter",
-      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/my-org/my-repo"],
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/VishnuDonti/simple-maven-project-with-tests"],
       contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
       errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
       statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
   ]);
 }
-
-
-
