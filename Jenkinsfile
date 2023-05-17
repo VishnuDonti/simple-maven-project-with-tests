@@ -1,5 +1,6 @@
 node {
   try {
+    
   stage('SCM') {
     checkout scm
   }
