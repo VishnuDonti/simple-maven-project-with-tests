@@ -23,9 +23,11 @@ node {
         if (currentResult == 'UNSTABLE') {
             echo 'This will run only if the run was marked as unstable'
             setBuildStatus("Build Unstable", "FAILED") 
-        } else {
-          setBuildStatus("Build Stable", "SUCCESS") 
-        }    
+        } else if(currentResult == 'FAILED'){
+          setBuildStatus("Build Failed", "FAILED") 
+        }  else {
+          setBuildStatus("Build Success", "Success") 
+        }
 } 
 }
 
